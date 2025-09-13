@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cadastro - Biblioteca Online</title>
+  <style>
+    :root{
+      --bg:#0b0c10; --muted:#9aa3af; --card:#111318; --card-2:#151821;
+      --text:#e5e7eb; --primary:#7c5cff; --primary-2:#6a4af7;
+      --ring:rgba(124,92,255,.35); --border:#202431; --accent:#1b2030;
+      --shadow:0 10px 30px rgba(0,0,0,.25); --radius:16px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f8fafc; --card:#ffffff; --card-2:#f9fafb; --text:#0f172a;
+        --muted:#64748b; --border:#e5e7eb; --accent:#eef2ff;
+        --shadow:0 10px 30px rgba(2,6,23,.08); --ring:rgba(124,92,255,.2); }
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{
+      margin:0; display:flex; align-items:center; justify-content:center;
+      background:radial-gradient(1000px 500px at 120% -10%, var(--accent), transparent 60%), var(--bg);
+      color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif;
+      padding:24px;
+    }
+    .card{
+      background:linear-gradient(180deg,var(--card),var(--card-2));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      width:100%; max-width:420px; padding:32px 28px;
+      box-shadow:var(--shadow);
+    }
+    h1{margin:0 0 8px; font-size:1.6rem; text-align:center}
+    .muted{text-align:center; margin-bottom:20px; font-size:.95rem; color:var(--muted)}
+    form{display:grid; gap:14px}
+    label{font-weight:600; font-size:.92rem; margin-bottom:6px; display:block}
+    input{
+      width:100%; padding:12px; border-radius:12px;
+      border:1px solid var(--border); background:var(--card-2);
+      color:var(--text); font-size:1rem; outline:none;
+      transition:border-color .2s ease, box-shadow .2s ease;
+    }
+    input:focus{border-color:var(--primary); box-shadow:0 0 0 3px var(--ring)}
+    .btn{
+      padding:12px; border-radius:12px; font-weight:600; font-size:1rem;
+      cursor:pointer; border:none; display:inline-flex; align-items:center; justify-content:center;
+      transition:background .2s ease, transform .12s ease;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; box-shadow:0 8px 24px var(--ring)}
+    .btn-primary:hover{filter:brightness(1.05)}
+    .err{margin-top:6px; color:#ff7b7b; font-size:.9rem}
+    .ok{margin-top:6px; color:#22c55e; font-size:.9rem; text-align:center}
+    .footer{text-align:center; margin-top:16px; font-size:.9rem}
+    .footer a{color:var(--primary); text-decoration:none; font-weight:600}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Cadastro</h1>
+    <div class="muted">Entre na sua conta <strong>Biblioteca Online</strong></div>
+
+    <form method="post" action="">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="err">
+          {% for e in form.non_field_errors %}<div>{{ e }}</div>{% endfor %}
+        </div>
+      {% endif %}
+
+
+      <div>
+        <label for="id_email">Email</label>
+        {{ form.email }}
+        {% for e in form.email.errors %}<div class="err">{{ e }}</div>{% endfor %}
+      </div>
+
+      <div>
+        <label for="id_senha">Senha</label>
+        {{ form.senha }}
+        {% for e in form.senha.errors %}<div class="err">{{ e }}</div>{% endfor %}
+      </div>
+
+      <button class="btn btn-primary" type="submit">Entrar</button>
+
+      {% if messages %}
+        {% for m in messages %}
+          <div class="ok">{{ m }}</div>
+        {% endfor %}
+      {% endif %}
+    </form>
+
+    <div class="footer">
+      Não tem conta? <a href="cadastroUsuario">Cadastrar</a>
+    </div>
+  </div>
+</body>
+</html>
