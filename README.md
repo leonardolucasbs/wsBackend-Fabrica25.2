@@ -89,7 +89,7 @@ Base do projeto: `http://localhost:8000/`
 
 ### Interface Web (Templates)
 
-- `/` ou `''`: página de Login.
+- `http://127.0.0.1:8000` : página de Login.
 - `/cadastro/`: página de Cadastro.
 - `/home/`: pesquisa de livros (OpenLibrary) e ação de aluguel.
 - `/alugar/`: confirmação de aluguel e escolha da data de entrega.
@@ -114,7 +114,8 @@ Base da API: `http://localhost:8000/api/`
 - `GET /livros/`: lista aluguéis do usuário da sessão atual.
 - `POST /livros/`: cria aluguel para o usuário da sessão. Exemplo payload:
   ```json
-  { "titulo": "Clean Code", "autor": "Robert C. Martin", "data_entrega": "2025-12-31" }
+    {"usuario": 3,  "titulo": "Introdução ao COBOL",  "autor": "Grace Hopper",  "data_entrega": "2025-09-30"}
+
   ```
 - `GET /livros/{id}/`: detalhes.
 - `PUT/PATCH /livros/{id}/`: atualiza.
