@@ -68,6 +68,12 @@
           {% for e in form.non_field_errors %}<div>{{ e }}</div>{% endfor %}
         </div>
       {% endif %}
+      <div>
+        <label for="id_email">nome</label>
+        {{ form.nome }}
+        {% for e in form.nome.errors %}<div class="err">{{ e }}</div>{% endfor %}
+      </div>
+
 
 
       <div>
@@ -92,7 +98,7 @@
     </form>
 
     <div class="footer">
-      Já tem conta? <a href="#">Entrar</a>
+      Já tem conta? <a href="{% url 'loginUsuario' %}">Entrar</a>
     </div>
   </div>
 </body>

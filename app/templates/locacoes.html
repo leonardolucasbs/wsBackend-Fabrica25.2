@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Meus aluguéis — Biblioteca Online</title>
+  <style>
+    body{margin:0;font-family:system-ui,Arial,sans-serif;background:#0b0c10;color:#e5e7eb}
+    .wrap{max-width:1000px;margin:0 auto;padding:24px}
+    h1{margin:0 0 12px}
+    .muted{color:#9aa3af}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:16px}
+    .card{background:#111318;border:1px solid #202431;border-radius:14px;padding:14px}
+    .title{font-weight:700;margin:0 0 6px}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{border:1px solid #202431;border-radius:999px;padding:6px 10px;color:#9aa3af;font-size:.9rem}
+    a.btn{display:inline-block;margin-top:10px;padding:10px 14px;border-radius:12px;text-decoration:none;
+      background:linear-gradient(135deg,#7c5cff,#6a4af7);color:#fff}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Meus aluguéis</h1>
+    <p class="muted">Olá, {{ usuario.nome }}. Aqui estão os livros que você alugou.</p>
+
+    {% if livros %}
+      <div class="grid">
+        {% for l in livros %}
+          <article class="card">
+            <h2 class="title">{{ l.titulo }}</h2>
+            <div class="row">
+              <span class="chip">Autor: {{ l.autor }}</span>
+              <span class="chip">Alugado em: {{ l.data_aluguel }}</span>
+              <span class="chip">Entrega: {{ l.data_entrega }}</span>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="muted">Você ainda não tem aluguéis.</p>
+    {% endif %}
+
+    <a class="btn" href="{% url 'home' %}">Voltar para a Biblioteca</a>
+  </div>
+</body>
+</html>

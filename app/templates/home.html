@@ -17,8 +17,11 @@
         --shadow:0 10px 30px rgba(2,6,23,.08); --ring:rgba(124,92,255,.2); }
     }
     *{box-sizing:border-box} html,body{height:100%}
-    body{ margin:0; background:radial-gradient(1000px 500px at 120% -10%, var(--accent), transparent 60%), var(--bg);
-      color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif; }
+    body{
+      margin:0;
+      background:radial-gradient(1000px 500px at 120% -10%, var(--accent), transparent 60%), var(--bg);
+      color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif;
+    }
     .container{max-width:1200px; margin:0 auto; padding:24px}
 
     header{display:grid; grid-template-columns:1fr auto; gap:16px; margin-bottom:24px; align-items:center}
@@ -27,6 +30,8 @@
     h1{font-size:clamp(1.25rem,2vw,1.75rem); margin:0}
     .muted{color:var(--muted); font-size:.95rem}
 
+    /* barra de busca + botão no topo */
+    .header-actions{display:flex; gap:10px; align-items:center}
     .search{
       display:flex; gap:10px; align-items:center; width:100%;
       background:linear-gradient(180deg,var(--card),var(--card-2));
@@ -48,9 +53,12 @@
     .btn-ghost:hover{border-color:var(--ring); background:rgba(124,92,255,.08)}
 
     .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px}
-    .card{background:linear-gradient(180deg,var(--card),var(--card-2)); border:1px solid var(--border);
-      border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
-      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease}
+    .card{
+      background:linear-gradient(180deg,var(--card),var(--card-2));
+      border:1px solid var(--border); border-radius:var(--radius);
+      overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
+      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease
+    }
     .card:hover{transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.35); border-color:var(--ring)}
     .thumb{position:relative; aspect-ratio:3/4; background:#0f1220; display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); overflow:hidden}
     .thumb img{width:100%; height:100%; object-fit:cover; display:block; transform:scale(1.01)}
@@ -60,7 +68,7 @@
     .meta{display:flex; flex-wrap:wrap; gap:10px 16px; margin-bottom:12px}
     .chip{font-size:.82rem; color:var(--muted); padding:6px 10px; border:1px solid var(--border); background:rgba(255,255,255,.02); border-radius:999px}
     .actions{margin-top:auto; padding:0 14px 14px; display:flex; gap:10px; flex-wrap:wrap}
-    @media (max-width:640px){ header{grid-template-columns:1fr; gap:10px} }
+    @media (max-width:640px){ header{grid-template-columns:1fr; gap:10px} .header-actions{flex-direction:column; align-items:stretch} }
   </style>
 </head>
 <body>
@@ -76,18 +84,22 @@
         </div>
       </div>
 
-      <!-- Formulário de busca (GET ?q=...) -->
-      <form class="search" method="get" action="">
-        <input
-          type="text"
-          name="q"
-          value="{{ q|default_if_none:'' }}"
-          placeholder="Pesquisar livros (ex.: Python, Romance, IA)..."
-          aria-label="Pesquisar livros"
-          required
-        />
-        <button class="btn btn-primary" type="submit">Pesquisar</button>
-      </form>
+    
+      <div class="header-actions">
+        <form class="search" method="get" action="">
+          <input
+            type="text"
+            name="q"
+            value="{{ q|default_if_none:'' }}"
+            placeholder="Pesquisar livros (ex.: Python, Romance, IA)..."
+            aria-label="Pesquisar livros"
+            required
+          />
+          <button class="btn btn-primary" type="submit">Pesquisar</button>
+        </form>
+        <a class="btn btn-primary" href="{% url 'logout' %}">Sair</a>
+        <a class="btn btn-primary" href="{% url 'locacoes' %}">Meus aluguéis</a>
+      </div>
     </header>
 
     <main class="grid">
@@ -110,8 +122,21 @@
           </div>
 
           <div class="actions">
-            <a class="btn btn-ghost" href="" title="Alugar">Alugar</a>
-            <a class="btn btn-primary" href="https://openlibrary.org{{ livro.key }}" target="_blank" rel="noopener noreferrer" title="Ver mais">Ver mais</a>
+
+            <a class="btn btn-ghost"
+               href="{% url 'alugarLivro' %}?titulo={{ livro.titulo|urlencode }}&autor={{ livro.autor|urlencode }}
+               {% if livro.capa_id %}&capa_id={{ livro.capa_id }}{% endif %}
+               {% if livro.ano %}&ano={{ livro.ano|urlencode }}{% endif %}
+               {% if livro.key %}&key={{ livro.key|urlencode }}{% endif %}">
+              Alugar
+            </a>
+
+            <!-- Ver mais: link externo da OpenLibrary -->
+            <a class="btn btn-primary"
+               href="https://openlibrary.org{{ livro.key }}"
+               target="_blank" rel="noopener noreferrer" title="Ver mais">
+              Ver mais
+            </a>
           </div>
         </article>
       {% endfor %}

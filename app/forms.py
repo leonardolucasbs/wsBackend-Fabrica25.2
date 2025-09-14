@@ -17,3 +17,9 @@ class LoginForm(forms.Form):
     email = forms.EmailField(max_length=254, widget=forms.EmailInput(attrs={"autocomplete": "email"}))
     senha = forms.CharField(widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}))
     
+class AlugarForm(forms.Form):
+    titulo = forms.CharField(max_length=200, widget=forms.HiddenInput())
+    autor  = forms.CharField(max_length=100, widget=forms.HiddenInput())
+    data_entrega = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date"})
+    )

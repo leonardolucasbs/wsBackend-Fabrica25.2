@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Alugar — Biblioteca Online</title>
+  <style>
+    :root{
+      --bg:#0b0c10; --muted:#9aa3af; --card:#111318; --card-2:#151821;
+      --text:#e5e7eb; --primary:#7c5cff; --primary-2:#6a4af7;
+      --ring:rgba(124,92,255,.35); --border:#202431; --accent:#1b2030;
+      --shadow:0 10px 30px rgba(0,0,0,.25); --radius:16px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f8fafc; --card:#ffffff; --card-2:#f9fafb; --text:#0f172a;
+        --muted:#64748b; --border:#e5e7eb; --accent:#eef2ff;
+        --shadow:0 10px 30px rgba(2,6,23,.08); --ring:rgba(124,92,255,.2); }
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0; background:radial-gradient(1000px 500px at 120% -10%, var(--accent), transparent 60%), var(--bg);
+      color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif;}
+    .container{max-width:980px; margin:0 auto; padding:24px}
+    .card{display:grid; grid-template-columns: 320px 1fr; gap:24px;
+      background:linear-gradient(180deg,var(--card),var(--card-2)); border:1px solid var(--border);
+      border-radius:16px; box-shadow:var(--shadow); padding:18px}
+    .thumb{aspect-ratio:3/4; background:#0f1220; border-radius:12px; overflow:hidden; display:flex; align-items:center; justify-content:center}
+    .thumb img{width:100%; height:100%; object-fit:cover}
+    .title{margin:0 0 6px; font-weight:800; font-size:1.4rem}
+    .muted{color:var(--muted)}
+    form{margin-top:16px; display:grid; gap:12px; align-items:center; max-width:340px}
+    input[type="date"]{padding:10px; border-radius:12px; border:1px solid var(--border); background:var(--card-2); color:var(--text)}
+    input[type="date"]:focus{outline:none; border-color:var(--primary); box-shadow:0 0 0 3px var(--ring)}
+    .btn{appearance:none; border:none; cursor:pointer; padding:12px 14px; border-radius:12px; font-weight:700}
+    .btn-primary{color:#fff; background:linear-gradient(135deg,var(--primary),var(--primary-2)); box-shadow:0 8px 24px var(--ring)}
+    .btn-ghost{color:var(--text); background:transparent; border:1px solid var(--border)}
+    .row{display:flex; gap:10px; align-items:center}
+    @media (max-width:780px){ .card{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="thumb">
+        {% if capa_id %}
+          <img src="https://covers.openlibrary.org/b/id/{{ capa_id }}-L.jpg" alt="Capa de {{ titulo }}">
+        {% else %}
+          <div style="width:80px;height:110px;border:2px dashed #334155;border-radius:10px;opacity:.6"></div>
+        {% endif %}
+      </div>
+
+      <div>
+        <h1 class="title">{{ titulo }}</h1>
+        <p class="muted">Autor: {{ autor }}{% if ano %} • Ano: {{ ano }}{% endif %}</p>
+        {% if key %}
+          <p><a class="btn btn-ghost" href="https://openlibrary.org{{ key }}" target="_blank" rel="noopener">Ver mais na OpenLibrary</a></p>
+        {% endif %}
+
+        
+        <form method="post" action="{% url 'alugarLivro' %}">
+          {% csrf_token %}
+
+          
+          {{ form.titulo }}  
+          {{ form.autor }}   
+
+         
+          
+          <input type="hidden" name="capa_id" value="{{ capa_id }}">
+          <input type="hidden" name="ano"     value="{{ ano }}">
+          <input type="hidden" name="key"     value="{{ key }}">
+
+          <label for="{{ form.data_entrega.id_for_label }}">Data de entrega</label>
+          {{ form.data_entrega }} 
+          <script>
+            
+            (function(){
+              var el = document.getElementById("{{ form.data_entrega.id_for_label }}");
+              if(!el) el = document.querySelector('input[name="data_entrega"]');
+              if(el && !el.min) el.min = "{{ today }}";
+            })();
+          </script>
+
+          <div class="row">
+            <a class="btn btn-ghost" href="{% url 'home' %}">Cancelar</a>
+            <button class="btn btn-primary" type="submit">Confirmar aluguel</button>
+          </div>
+
+          {% if form.errors %}
+            <div class="muted">Verifique a data informada.</div>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
