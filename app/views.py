@@ -1,17 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404                
 from django.contrib.auth.hashers import check_password
-from django.views.decorators.cache import never_cache
-from django.utils.decorators import method_decorator        
+from django.views.decorators.cache import never_cache      
+from app.api.serializers import UsuariosSerializer
 from django.views.generic import FormView              
+from app.models import Usuarios, Livros
+from django.shortcuts import redirect
 from django.urls import reverse_lazy                    
 from django.contrib import messages                     
-from django.shortcuts import redirect
-from app.models import Usuarios, Livros
 from datetime import date                    
 from .forms import *
 import requests
 
-from app.api.serializers import UsuariosSerializer
 
 
 def listaDeLivros(request):
